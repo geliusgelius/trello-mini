@@ -4,6 +4,39 @@
   --priority-low: #06d6a0;
 }
 
+/* Regular */
+@font-face {
+  font-family: "Montserrat";
+  src: url("../assets/fonts/Montserrat-Regular.woff2") format("woff2"),
+    url("../assets/fonts/Montserrat-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+/* Medium */
+@font-face {
+  font-family: "Montserrat";
+  src: url("../assets/fonts/Montserrat-Medium.woff2") format("woff2"),
+    url("../assets/fonts/Montserrat-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-display: swap;
+}
+/* Bold */
+@font-face {
+  font-family: "Montserrat";
+  src: url("../assets/fonts/Montserrat-Bold.woff2") format("woff2"),
+    url("../assets/fonts/Montserrat-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+/* Light */
+@font-face {
+  font-family: "Montserrat";
+  src: url("../assets/fonts/Montserrat-Light.woff2") format("woff2"),
+    url("../assets/fonts/Montserrat-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-display: swap;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -11,8 +44,8 @@
 }
 
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f5f7fa;
+  font-family: "Montserrat", sans-serif;
+  background: linear-gradient(180deg, #87cefa, #e0f7fa);
   color: #333;
   line-height: 1.6;
 }
@@ -55,6 +88,7 @@ button {
   cursor: pointer;
   transition: background-color 0.2s;
   font-size: 0.9rem;
+  font-family: "Montserrat", sans-serif;
 }
 
 button:hover {

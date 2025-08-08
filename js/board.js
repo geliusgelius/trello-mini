@@ -1,5 +1,4 @@
-import { saveToStorage } from "./storage.js";
-import { createCard } from "./card.js";
+import { saveBoard, getCurrentBoardState } from "./storage.js";
 
 export const COLUMNS = [
   { id: "todo", title: "To Do" },
@@ -7,17 +6,7 @@ export const COLUMNS = [
   { id: "done", title: "Done" },
 ];
 
-export function initBoard() {
-  const board = document.getElementById("board");
-  board.innerHTML = "";
-
-  COLUMNS.forEach((column) => {
-    createColumn(column.id, column.title);
-  });
-
-  setupDragAndDrop();
-}
-
+// Создает новую колонку
 export function createColumn(columnId, title) {
   const board = document.getElementById("board");
   const column = document.createElement("div");
@@ -26,65 +15,69 @@ export function createColumn(columnId, title) {
 
   column.innerHTML = `
         <div class="column-header">
-            <h3 class="column-title">${title}</h3>
-            <button class="add-card-btn" data-column="${columnId}">
-                <i class="fas fa-plus"></i>
+            <h3 class="column-title" contenteditable="true">${title}</h3>
+            <button class="delete-column-btn">
+                <i class="fas fa-times"></i>
             </button>
         </div>
         <div class="cards-container" id="${columnId}-cards"></div>
+        <button class="add-card-btn" data-column="${columnId}">
+            <i class="fas fa-plus"></i> Добавить карточку
+        </button>
     `;
 
-  // Настройка событий для заголовка колонки
-  column.querySelector(".column-title").addEventListener("click", function () {
-    const newTitle = prompt("Новое название:", this.textContent);
-    if (newTitle && newTitle.trim()) {
-      this.textContent = newTitle.trim();
-      saveToStorage();
+  // Удаление колонки
+  column.querySelector(".delete-column-btn").addEventListener("click", () => {
+    if (confirm("Удалить колонку и все карточки?")) {
+      column.remove();
+      saveBoard(getCurrentBoardState());
     }
   });
 
   board.appendChild(column);
+  setupDragAndDrop(column);
+  return column;
 }
 
-function setupDragAndDrop() {
-  const board = document.getElementById("board");
+// Настройка drag-and-drop для колонки
+function setupDragAndDrop(column) {
+  const cardsContainer = column.querySelector(".cards-container");
 
-  // Настройка событий для колонок
-  document.querySelectorAll(".column").forEach((column) => {
-    column.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      const draggingCard = document.querySelector(".dragging");
-      if (draggingCard) {
-        const afterElement = getDragAfterElement(column, e.clientY);
-        const cardsContainer = column.querySelector(".cards-container");
-
-        if (afterElement) {
-          cardsContainer.insertBefore(draggingCard, afterElement);
-        } else {
-          cardsContainer.appendChild(draggingCard);
-        }
+  column.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    const draggingCard = document.querySelector(".dragging");
+    if (draggingCard) {
+      const afterElement = getDragAfterElement(cardsContainer, e.clientY);
+      if (afterElement) {
+        cardsContainer.insertBefore(draggingCard, afterElement);
+      } else {
+        cardsContainer.appendChild(draggingCard);
       }
-    });
+    }
   });
+}
 
-  // Функция для определения позиции при перетаскивании
-  function getDragAfterElement(container, y) {
-    const draggableElements = [
-      ...container.querySelectorAll(".card:not(.dragging)"),
-    ];
+// Инициализация доски
+export function initBoard() {
+  const board = document.getElementById("board");
+  board.innerHTML = "";
 
-    return draggableElements.reduce(
-      (closest, child) => {
-        const box = child.getBoundingClientRect();
-        const offset = y - box.top - box.height / 2;
+  COLUMNS.forEach((column) => {
+    createColumn(column.id, column.title);
+  });
+}
 
-        if (offset < 0 && offset > closest.offset) {
-          return { offset: offset, element: child };
-        } else {
-          return closest;
-        }
-      },
-      { offset: Number.NEGATIVE_INFINITY }
-    ).element;
-  }
+// Вспомогательная функция для определения позиции при переносе
+function getDragAfterElement(container, y) {
+  const cards = [...container.querySelectorAll(".card:not(.dragging)")];
+  return cards.reduce(
+    (closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      return offset < 0 && offset > closest.offset
+        ? { offset: offset, element: child }
+        : closest;
+    },
+    { offset: Number.NEGATIVE_INFINITY }
+  ).element;
 }

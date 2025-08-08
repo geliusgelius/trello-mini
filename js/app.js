@@ -1,21 +1,44 @@
 import { initBoard, createColumn } from "./board.js";
-import { loadFromStorage, saveToStorage } from "./storage.js";
+import {
+  saveBoard,
+  loadBoard,
+  clearBoard,
+  getCurrentBoardState,
+} from "./storage.js";
 import { setupEventListeners } from "./events.js";
-import { showModal } from "./modal.js";
+import { createCard } from "./card.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Инициализация приложения
+  // Инициализация доски
   initBoard();
-  loadFromStorage();
+
+  // Загрузка сохраненных данных
+  const savedData = loadBoard();
+  if (savedData) {
+    Object.keys(savedData.columns).forEach((columnId) => {
+      const columnData = savedData.columns[columnId];
+      createColumn(columnId, columnData.title);
+
+      columnData.cards.forEach((cardData) => {
+        const card = createCard(cardData.text, columnId);
+
+        // Восстанавливаем свойства карточки
+        if (cardData.color) card.style.backgroundColor = cardData.color;
+        if (cardData.priority) {
+          const select = card.querySelector(".priority-select");
+          if (select) select.value = cardData.priority;
+        }
+
+        document.getElementById(`${columnId}-cards`).appendChild(card);
+      });
+    });
+  }
+
+  // Настройка обработчиков событий
   setupEventListeners();
 
   // Автосохранение каждые 30 секунд
-  setInterval(saveToStorage, 30000);
-
-  // Проверка дедлайнов при загрузке
-  setTimeout(() => {
-    document.querySelectorAll(".deadline-input").forEach((input) => {
-      input.dispatchEvent(new Event("change"));
-    });
-  }, 1000);
+  setInterval(() => {
+    saveBoard(getCurrentBoardState());
+  }, 30000);
 });

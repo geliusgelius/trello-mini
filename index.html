@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Полнофункциональный Trello</title>
+    <title>Улучшенный Trello</title>
     <link rel="stylesheet" href="css/style.css" />
     <link
       rel="stylesheet"
@@ -13,10 +13,10 @@
   <body>
     <div class="app">
       <header>
-        <h1><i class="fas fa-smile"></i> Trello c алиэкспресс</h1>
+        <h1><i class="fas fa-trello"></i> Моя доска задач</h1>
         <div class="controls">
           <button id="add-column-btn">
-            <i class="fas fa-plus"></i> Колонку
+            <i class="fas fa-plus"></i> Колонка
           </button>
           <button id="save-board-btn">
             <i class="fas fa-save"></i> Сохранить
@@ -26,11 +26,15 @@
 
       <div class="board" id="board"></div>
 
-      <!-- Шаблон для модального окна -->
       <div id="modal" class="modal">
         <div class="modal-content">
-          <span class="close">&times;</span>
+          <span class="close-btn">&times;</span>
+          <h3 id="modal-title"></h3>
           <div id="modal-body"></div>
+          <div class="modal-actions">
+            <button id="modal-submit">OK</button>
+            <button id="modal-cancel">Отмена</button>
+          </div>
         </div>
       </div>
     </div>

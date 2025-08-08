@@ -15,11 +15,11 @@ export function createCard(text, columnId) {
             </div>
         </div>
         <div class="priority-container">
-            <span>Приоритет:</span>
+            <span>Priority:</span>
             <select class="priority-select">
-                <option value="low">Низкий</option>
-                <option value="medium">Средний</option>
-                <option value="high">Высокий</option>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
             </select>
         </div>
     `;

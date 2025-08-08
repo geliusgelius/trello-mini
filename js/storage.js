@@ -5,6 +5,7 @@ const STORAGE_KEY = "trello-board-data";
 
 export function saveBoard() {
   const boardData = {
+    theme: localStorage.getItem("theme") || "light",
     columns: {},
     lastUpdated: new Date().toISOString(),
   };
@@ -35,6 +36,12 @@ export function loadBoard() {
   try {
     const boardData = JSON.parse(savedData);
     const board = document.getElementById("board");
+
+    if (boardData.theme) {
+      document.documentElement.setAttribute("data-theme", boardData.theme);
+      document.getElementById("theme-toggle").checked =
+        boardData.theme === "dark";
+    }
 
     // Создаем колонки из сохраненных данных
     Object.keys(boardData.columns).forEach((columnId) => {

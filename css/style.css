@@ -2,6 +2,7 @@
   --priority-high: #ff6b6b;
   --priority-medium: #ffd166;
   --priority-low: #06d6a0;
+  --button-bg: #000000;
 }
 
 /* Regular */
@@ -284,6 +285,148 @@ button:hover {
 
 .modal-cancel {
   background: #ddd;
+}
+
+/* Переключатель темы */
+/* Базовые стили переключателя */
+.theme-switch {
+  display: inline-block;
+  position: relative;
+  width: 60px;
+  height: 34px;
+  cursor: pointer;
+}
+
+.theme-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Стили фона переключателя */
+/* Контейнер переключателя */
+.theme-switch {
+  display: inline-block;
+  position: relative;
+  width: 60px; /* Фиксированная ширина */
+  height: 34px; /* Фиксированная высота */
+  cursor: pointer;
+}
+
+/* Скрываем оригинальный чекбокс */
+.theme-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Фон переключателя */
+.slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc; /* Цвет фона светлой темы */
+  transition: 0.4s;
+  border-radius: 34px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Бегунок (ползунок) */
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+  z-index: 2;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Общие стили для иконок */
+.slider svg {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  z-index: 1;
+  transition: 0.3s;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.7));
+}
+
+/* Иконка солнца (светлая тема) */
+.slider .sun {
+  left: 8px;
+  opacity: 1;
+  color: #ffa500; /* Оранжевый */
+}
+
+/* Иконка луны (темная тема) */
+.slider .moon {
+  right: 8px;
+  opacity: 0;
+  color: #ffffff; /* Белый */
+}
+
+/* Темная тема (активирована) */
+input:checked + .slider {
+  background-color: #29668a; /* Цвет фона темной темы */
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+input:checked + .slider .sun {
+  opacity: 0; /* Скрываем солнце */
+}
+
+input:checked + .slider .moon {
+  opacity: 1; /* Показываем луну */
+}
+
+/* Эффекты при наведении */
+.theme-switch:hover .slider:before {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+input:checked:hover + .slider:before {
+  transform: translateX(26px) scale(1.1);
+}
+
+/* Темная тема */
+[data-theme="dark"] {
+  --bg-color: #222;
+  --text-color: #f0f0f0;
+  --column-bg: #333;
+  --card-bg: #444;
+  --button-bg: #333333;
+}
+
+[data-theme="dark"] body {
+  background: linear-gradient(180deg, #032336, #2d5257);
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .column {
+  background: var(--column-bg);
+}
+
+[data-theme="dark"] .card {
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .modal-content {
+  background: var(--column-bg);
+  color: var(--text-color);
 }
 
 @media (max-width: 768px) {

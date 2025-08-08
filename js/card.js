@@ -1,6 +1,5 @@
-import { getCurrentBoardState, saveBoard } from "./storage.js";
+import { saveBoard } from "./storage.js";
 
-// Создает новую карточку
 export function createCard(text, columnId) {
   const card = document.createElement("div");
   card.className = "card";
@@ -29,47 +28,51 @@ export function createCard(text, columnId) {
   return card;
 }
 
-// Настройка обработчиков событий карточки
 function setupCardEvents(card) {
-  // Drag-and-drop
-  card.addEventListener("dragstart", () => card.classList.add("dragging"));
-  card.addEventListener("dragend", () => {
-    card.classList.remove("dragging");
-    saveBoard(getCurrentBoardState());
+  card.addEventListener("dragstart", () => {
+    card.classList.add("dragging");
   });
 
-  // Редактирование текста
+  card.addEventListener("dragend", () => {
+    card.classList.remove("dragging");
+    saveBoard();
+  });
+
   card.querySelector(".card-text").addEventListener("dblclick", function () {
-    const newText = prompt("Новый текст:", this.textContent);
-    if (newText) {
+    const newText = prompt("Редактировать текст:", this.textContent);
+    if (newText !== null) {
       this.textContent = newText;
-      saveBoard(getCurrentBoardState());
+      saveBoard();
     }
   });
 
-  // Выбор цвета
   card.querySelector(".color-btn").addEventListener("click", function (e) {
     e.stopPropagation();
     const colorPicker = document.createElement("input");
     colorPicker.type = "color";
-    colorPicker.addEventListener("change", () => {
-      card.style.backgroundColor = colorPicker.value;
-      saveBoard(getCurrentBoardState());
+    colorPicker.value = card.style.backgroundColor || "#ffffff";
+
+    colorPicker.addEventListener("change", function () {
+      card.style.backgroundColor = this.value;
+      saveBoard();
     });
+
     colorPicker.click();
   });
 
-  // Удаление карточки
   card.querySelector(".delete-btn").addEventListener("click", function (e) {
     e.stopPropagation();
-    if (confirm("Удалить карточку?")) {
+    if (confirm("Удалить эту карточку?")) {
       card.remove();
-      saveBoard(getCurrentBoardState());
+      saveBoard();
     }
   });
 
-  // Изменение приоритета
-  card.querySelector(".priority-select").addEventListener("change", () => {
-    saveBoard(getCurrentBoardState());
-  });
+  card
+    .querySelector(".priority-select")
+    .addEventListener("change", function () {
+      card.className = "card";
+      card.classList.add(`priority-${this.value}`);
+      saveBoard();
+    });
 }

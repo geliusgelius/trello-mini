@@ -1,23 +1,9 @@
-const STORAGE_KEY = "trello-board-final";
+import { DEFAULT_COLUMNS } from "./board.js";
+import { createCard } from "./card.js"; // Изменено с board.js на card.js
 
-// Сохраняет текущее состояние доски
-export function saveBoard(data) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
+const STORAGE_KEY = "trello-board-data";
 
-// Загружает данные из localStorage
-export function loadBoard() {
-  const data = localStorage.getItem(STORAGE_KEY);
-  return data ? JSON.parse(data) : null;
-}
-
-// Очищает хранилище
-export function clearBoard() {
-  localStorage.removeItem(STORAGE_KEY);
-}
-
-// Получает текущее состояние доски
-export function getCurrentBoardState() {
+export function saveBoard() {
   const boardData = {
     columns: {},
     lastUpdated: new Date().toISOString(),
@@ -39,5 +25,50 @@ export function getCurrentBoardState() {
     });
   });
 
-  return boardData;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(boardData));
+}
+
+export function loadBoard() {
+  const savedData = localStorage.getItem(STORAGE_KEY);
+  if (!savedData) return;
+
+  try {
+    const boardData = JSON.parse(savedData);
+    const board = document.getElementById("board");
+
+    // Создаем колонки из сохраненных данных
+    Object.keys(boardData.columns).forEach((columnId) => {
+      const columnData = boardData.columns[columnId];
+
+      // Проверяем, не является ли колонка одной из стандартных
+      const isDefaultColumn = DEFAULT_COLUMNS.some(
+        (col) => col.id === columnId
+      );
+      if (!isDefaultColumn) {
+        createColumn(columnId, columnData.title);
+      }
+
+      // Добавляем карточки
+      columnData.cards.forEach((cardData) => {
+        const card = createCard(cardData.text, columnId);
+
+        if (cardData.color) {
+          card.style.backgroundColor = cardData.color;
+        }
+
+        const prioritySelect = card.querySelector(".priority-select");
+        if (prioritySelect && cardData.priority) {
+          prioritySelect.value = cardData.priority;
+          card.classList.add(`priority-${cardData.priority}`);
+        }
+
+        const cardsContainer = document.getElementById(`${columnId}-cards`);
+        if (cardsContainer) {
+          cardsContainer.appendChild(card);
+        }
+      });
+    });
+  } catch (error) {
+    console.error("Ошибка загрузки данных:", error);
+  }
 }

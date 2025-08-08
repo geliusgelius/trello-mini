@@ -1,55 +1,43 @@
-export function showModal(title, callback, initialValue = "") {
-  const modal = document.getElementById("modal");
-  const modalTitle = document.getElementById("modal-title");
-  const modalBody = document.getElementById("modal-body");
+export function showModal(title, callback, defaultValue = "") {
+  const modal = document.createElement("div");
+  modal.className = "modal-overlay";
 
-  modalTitle.textContent = title;
+  modal.innerHTML = `
+        <div class="modal-content">
+            <h3>${title}</h3>
+            <textarea id="modal-input">${defaultValue}</textarea>
+            <div class="modal-actions">
+                <button id="modal-cancel">Отмена</button>
+                <button id="modal-submit">OK</button>
+            </div>
+        </div>
+    `;
 
-  // Очищаем тело модального окна
-  modalBody.innerHTML = "";
+  document.body.appendChild(modal);
 
-  // Создаем поле ввода в зависимости от типа данных
-  if (typeof initialValue === "string") {
-    const textarea = document.createElement("textarea");
-    textarea.id = "modal-input";
-    textarea.rows = 3;
-    textarea.value = initialValue;
-    modalBody.appendChild(textarea);
-  }
+  const input = modal.querySelector("#modal-input");
+  input.focus();
+  if (defaultValue) input.select();
 
-  // Показываем модальное окно
-  modal.style.display = "flex";
-
-  // Фокус на поле ввода
-  setTimeout(() => {
-    const input = modalBody.querySelector("textarea, input");
-    if (input) input.focus();
-  }, 100);
-
-  // Обработчик отправки
-  document.getElementById("modal-submit").onclick = () => {
-    const input = modalBody.querySelector("textarea, input");
-    if (input) {
-      callback(input.value);
-    }
-    modal.style.display = "none";
+  const closeModal = () => {
+    document.body.removeChild(modal);
+    document.removeEventListener("keydown", handleKeyDown);
   };
 
-  // Обработчик отмены
-  document.getElementById("modal-cancel").onclick = () => {
-    modal.style.display = "none";
+  const handleKeyDown = (e) => {
+    if (e.key === "Escape") closeModal();
   };
 
-  // Закрытие по клику вне модалки
-  modal.querySelector(".close-btn").onclick = () => {
-    modal.style.display = "none";
-  };
-
-  // Закрытие по Escape
-  document.addEventListener("keydown", function closeOnEscape(e) {
-    if (e.key === "Escape") {
-      modal.style.display = "none";
-      document.removeEventListener("keydown", closeOnEscape);
-    }
+  modal.querySelector("#modal-submit").addEventListener("click", () => {
+    callback(input.value);
+    closeModal();
   });
+
+  modal.querySelector("#modal-cancel").addEventListener("click", closeModal);
+
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  document.addEventListener("keydown", handleKeyDown);
 }

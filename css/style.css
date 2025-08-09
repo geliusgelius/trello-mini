@@ -288,7 +288,7 @@ button:hover {
 }
 
 /* Переключатель темы */
-/* Базовые стили переключателя */
+
 .theme-switch {
   display: inline-block;
   position: relative;
@@ -303,17 +303,14 @@ button:hover {
   height: 0;
 }
 
-/* Стили фона переключателя */
-/* Контейнер переключателя */
 .theme-switch {
   display: inline-block;
   position: relative;
-  width: 60px; /* Фиксированная ширина */
-  height: 34px; /* Фиксированная высота */
+  width: 60px;
+  height: 34px;
   cursor: pointer;
 }
 
-/* Скрываем оригинальный чекбокс */
 .theme-switch input {
   opacity: 0;
   width: 0;
@@ -327,7 +324,7 @@ button:hover {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc; /* Цвет фона светлой темы */
+  background-color: #ccc;
   transition: 0.4s;
   border-radius: 34px;
   box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
@@ -364,19 +361,19 @@ button:hover {
 .slider .sun {
   left: 8px;
   opacity: 1;
-  color: #ffa500; /* Оранжевый */
+  color: #ffa500;
 }
 
 /* Иконка луны (темная тема) */
 .slider .moon {
   right: 8px;
   opacity: 0;
-  color: #ffffff; /* Белый */
+  color: #ffffff;
 }
 
 /* Темная тема (активирована) */
 input:checked + .slider {
-  background-color: #29668a; /* Цвет фона темной темы */
+  background-color: #29668a;
 }
 
 input:checked + .slider:before {
@@ -384,14 +381,13 @@ input:checked + .slider:before {
 }
 
 input:checked + .slider .sun {
-  opacity: 0; /* Скрываем солнце */
+  opacity: 0;
 }
 
 input:checked + .slider .moon {
-  opacity: 1; /* Показываем луну */
+  opacity: 1;
 }
 
-/* Эффекты при наведении */
 .theme-switch:hover .slider:before {
   transform: scale(1.1);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
@@ -429,11 +425,45 @@ input:checked:hover + .slider:before {
   color: var(--text-color);
 }
 
+/* Медиа-запросы для адаптации */
+@media (max-width: 1200px) {
+  /* Для планшетов и небольших ноутбуков */
+  .board {
+    gap: 10px;
+    padding: 8px;
+  }
+
+  .column {
+    width: 280px;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 992px) {
+  /* Для планшетов в альбомной ориентации */
+  .board {
+    flex-wrap: wrap;
+    overflow-x: hidden;
+    gap: 12px;
+  }
+
+  .column {
+    width: calc(50% - 20px);
+    min-width: 0;
+  }
+}
+
 @media (max-width: 768px) {
+  /* Для планшетов в портретной ориентации и больших телефонов */
+  .app {
+    padding: 15px;
+  }
+
   header {
     flex-direction: column;
-    gap: 10px;
     align-items: flex-start;
+    gap: 15px;
+    padding: 12px 15px;
   }
 
   .controls {
@@ -441,7 +471,150 @@ input:checked:hover + .slider:before {
     justify-content: space-between;
   }
 
+  button {
+    padding: 7px 12px;
+    font-size: 0.85rem;
+  }
+
+  .board {
+    flex-direction: column;
+    gap: 15px;
+    overflow-x: hidden;
+  }
+
+  .column {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .modal-content {
+    width: 90%;
+    padding: 15px;
+  }
+}
+
+@media (max-width: 576px) {
+  /* Для мобильных телефонов */
+  .app {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 1.3rem;
+  }
+
+  .column {
+    padding: 10px;
+  }
+
+  .column-header {
+    margin-bottom: 10px;
+  }
+
+  .card {
+    padding: 10px;
+  }
+
+  .card-text {
+    font-size: 0.9rem;
+  }
+
+  .priority-container {
+    font-size: 0.8rem;
+  }
+
+  .priority-select {
+    font-size: 0.8rem;
+    padding: 4px;
+  }
+
+  .theme-switch {
+    width: 50px;
+    height: 28px;
+  }
+
+  .slider:before {
+    height: 22px;
+    width: 22px;
+  }
+
+  input:checked + .slider:before {
+    transform: translateX(22px);
+  }
+
   .modal-content {
     width: 95%;
+    padding: 12px;
+  }
+
+  .modal-content textarea {
+    min-height: 80px;
+  }
+}
+
+/* стили для очень маленьких экранов */
+@media (max-width: 400px) {
+  .controls {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  .column-title {
+    font-size: 1rem;
+  }
+
+  .add-card-btn {
+    font-size: 0.8rem;
+  }
+}
+
+/* Адаптация для ландшафтного режима на мобильных */
+@media (max-height: 500px) and (orientation: landscape) {
+  .app {
+    padding: 8px;
+  }
+
+  .board {
+    flex-direction: row;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 15px;
+  }
+
+  .column {
+    width: 260px;
+    min-height: 60vh;
+  }
+
+  header {
+    padding: 8px 10px;
+    margin-bottom: 10px;
+  }
+}
+
+/* Улучшение Drag and Drop на мобильных */
+@media (hover: none) {
+  .card {
+    cursor: pointer;
+  }
+
+  .card.dragging {
+    transform: scale(1.02);
+    opacity: 0.9;
+  }
+}
+
+/* Адаптация модального окна для маленьких экранов */
+@media (max-width: 400px) {
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .modal-actions button {
+    width: 100%;
   }
 }

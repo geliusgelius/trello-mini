@@ -27,7 +27,7 @@ export function createColumn(columnId, title) {
         </div>
         <div class="cards-container" id="${columnId}-cards"></div>
         <button class="add-card-btn" data-column="${columnId}">
-            <i class="fas fa-plus"></i> Add a card
+            <i class="fas fa-plus"></i> Добавить карточку
         </button>
     `;
 

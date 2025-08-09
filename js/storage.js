@@ -43,11 +43,9 @@ export function loadBoard() {
         boardData.theme === "dark";
     }
 
-    // Создаем колонки из сохраненных данных
     Object.keys(boardData.columns).forEach((columnId) => {
       const columnData = boardData.columns[columnId];
 
-      // Проверяем, не является ли колонка одной из стандартных
       const isDefaultColumn = DEFAULT_COLUMNS.some(
         (col) => col.id === columnId
       );
@@ -55,7 +53,6 @@ export function loadBoard() {
         createColumn(columnId, columnData.title);
       }
 
-      // Добавляем карточки
       columnData.cards.forEach((cardData) => {
         const card = createCard(cardData.text, columnId);
 
